@@ -36,7 +36,10 @@ const ProfileSchema = new Schema({
         type: String,
         required: true
     },
-    avatar: String
+    avatar: {
+        type: String,
+        required: true
+    }
 }, {
     timestamps: true
 });

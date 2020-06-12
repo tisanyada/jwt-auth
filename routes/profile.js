@@ -7,7 +7,10 @@ const profileController = require('../controllers/profile');
 router.get('/', isAuth, profileController.getProfile);
 
 // POST create profile
-router.post('/', isAuth, profileController.postCreateAndUpdateProfile);
+router.post('/', isAuth, profileController.postCreateProfile);
+
+// POST update profile
+router.post('/update', isAuth, profileController.postUpdateProfile);
 
 
 

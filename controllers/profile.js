@@ -14,44 +14,23 @@ exports.getProfile = (req, res) => {
         .catch(err => console.log(err));
 }
 
-exports.postCreateAndUpdateProfile = (req, res) => {
+exports.postCreateProfile = (req, res) => {
     const image = req.file;
     const { fullname, email, phone, address, dateofbirth, nationality, gender } = req.body;
     const { errors, isValid } = validateProfileInput(req.body);
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
-    if (!checkfile(image)) {
-        errors.image = 'image type is not supported, please upload jpg, jpeg or png';
-        return res.status(400).json(errors);
-        // res.json('image type is not supported, please upload jpg, jpeg or png');
-    }
-    // image path
-    console.log(image.path);
-    // create new profile
     Profile.findOne({ 'user': req.user.id })
         .then(isProfile => {
             if (isProfile) {
-                // update profile
-                isProfile.fullname = fullname;
-                isProfile.email = email;
-                isProfile.phone = phone;
-                isProfile.address = address;
-                isProfile.dateofbirth = dateofbirth;
-                isProfile.nationality = nationality;
-                isProfile.gender = gender;
-                if (image) {
-                    isProfile.avatar = image.path;
-                    deleteFile(isProfile.avatar);
-                }
-                isProfile.save()
-                    .then(result => {
-                        res.json(result);
-                    })
-                    .catch(err => console.log(err));
-                // errors.profile = 'Profile already exists for this user';
-                // res.status(401).json(errors);
+                errors.profile = 'Profile already exists for this user';
+                res.status(401).json(errors);
             } else {
+                if (!isValid) {
+                    return res.status(400).json(errors);
+                }
+                if (!checkfile(image)) {
+                    errors.image = 'profile image is required or file type is not supported, please upload jpg, jpeg or png';
+                    return res.status(400).json(errors);
+                }
                 const profile = new Profile({
                     user: req.user.id,
                     fullname,
@@ -71,6 +50,35 @@ exports.postCreateAndUpdateProfile = (req, res) => {
             }
         })
         .catch(err => console.log(err));
-
 }
 
+
+exports.postUpdateProfile = (req, res) => {
+    const image = req.file;
+    const { fullname, email, phone, address, dateofbirth, nationality, gender } = req.body;
+    const { errors, isValid } = validateProfileInput(req.body);
+    Profile.findOne({ 'user': req.user.id })
+        .then(profile => {
+
+            if(!isValid){
+                return res.status(400).json(errors);
+            }
+
+            profile.fullname = fullname;
+            profile.email = email;
+            profile.phone = phone;
+            profile.address = address;
+            profile.dateofbirth = dateofbirth;
+            profile.nationality = nationality;
+            profile.gender = gender;
+            if (image && checkfile(image)){
+                deleteFile(profile.avatar);
+                profile.avatar = image.path;
+            }
+            return profile.save();
+        })
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err => console.log(err));
+}
