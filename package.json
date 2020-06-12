@@ -1,0 +1,28 @@
+{
+	"name": "ty-auth-jwt",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server",
+		"server": "nodemon server"
+	},
+	"author": "Yada Martins",
+	"license": "ISC",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"helmet": "^3.21.3",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^5.9.5",
+		"morgan": "^1.9.1",
+		"passport": "^0.4.1",
+		"passport-jwt": "^4.0.0",
+		"password-validator": "^5.0.3",
+		"ui-avatars": "^1.0.0",
+		"validator": "^12.2.0"
+	}
+}
