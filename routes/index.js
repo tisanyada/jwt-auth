@@ -9,5 +9,4 @@ router.get('/', isAuth, indexController.getUser);
 
 
 
-
 module.exports = router;
