@@ -2,6 +2,7 @@
 const validateProfileInput = require('../validation/profile');
 const Profile = require('../models/Profile');
 const checkfile = require('../middlewares/checkfile');
+const deleteFile = require('../utils/file').deleteFile;
 
 
 exports.getProfile = (req, res) => {
@@ -32,25 +33,42 @@ exports.postCreateAndUpdateProfile = (req, res) => {
         .then(isProfile => {
             if (isProfile) {
                 // update profile
-                errors.profile = 'Profile already exists for this user';
-                res.status(401).json(errors);
+                isProfile.fullname = fullname;
+                isProfile.email = email;
+                isProfile.phone = phone;
+                isProfile.address = address;
+                isProfile.dateofbirth = dateofbirth;
+                isProfile.nationality = nationality;
+                isProfile.gender = gender;
+                if (image) {
+                    isProfile.avatar = image.path;
+                    deleteFile(isProfile.avatar);
+                }
+                isProfile.save()
+                    .then(result => {
+                        res.json(result);
+                    })
+                    .catch(err => console.log(err));
+                // errors.profile = 'Profile already exists for this user';
+                // res.status(401).json(errors);
+            } else {
+                const profile = new Profile({
+                    user: req.user.id,
+                    fullname,
+                    email,
+                    phone,
+                    address,
+                    dateofbirth,
+                    nationality,
+                    gender,
+                    avatar: image.path
+                });
+                profile.save()
+                    .then(result => {
+                        res.json(result);
+                    })
+                    .catch(err => console.log(err));
             }
-            const profile = new Profile({
-                user: req.user.id,
-                fullname,
-                email,
-                phone,
-                address,
-                dateofbirth,
-                nationality,
-                gender,
-                avatar: image.path
-            });
-            profile.save()
-                .then(result => {
-                    res.json(result);
-                })
-                .catch(err => console.log(err));
         })
         .catch(err => console.log(err));
 
