@@ -23,8 +23,8 @@ require('./config/passport')(passport);
 const indexRoutes = require('./routes/index');
 const authRoutes = require('./routes/auth');
 
-app.use(indexRoutes);
-app.use('/api/users', authRoutes);
+app.use('/api/users', indexRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res, next) => {
     res.json('route not found');

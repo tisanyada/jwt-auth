@@ -87,7 +87,3 @@ exports.postLoginUser = (req, res) => {
             .catch(err => console.log(err));
     }
 }
-
-exports.getUser = (req, res) => {
-    res.json(req.user);
-}
