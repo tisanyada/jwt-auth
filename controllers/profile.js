@@ -1,7 +1,9 @@
 // validate profile input
-const validateProfileInput = require('../validation/profile');
 const Profile = require('../models/Profile');
-const checkfile = require('../middlewares/checkfile');
+
+const validateProfileInput = require('../validation/profile');
+const imageUpload = require('../middlewares/checkfile').imageUpload;
+const imageUpdate = require('../middlewares/checkfile').imageUpdate;
 const deleteFile = require('../utils/file').deleteFile;
 
 
@@ -27,7 +29,7 @@ exports.postCreateProfile = (req, res) => {
                 if (!isValid) {
                     return res.status(400).json(errors);
                 }
-                if (!checkfile(image)) {
+                if (!imageUpload(image)) {
                     errors.image = 'profile image is required or file type is not supported, please upload jpg, jpeg or png';
                     return res.status(400).json(errors);
                 }
@@ -60,7 +62,7 @@ exports.postUpdateProfile = (req, res) => {
     Profile.findOne({ 'user': req.user.id })
         .then(profile => {
 
-            if(!isValid){
+            if (!isValid) {
                 return res.status(400).json(errors);
             }
 
@@ -71,7 +73,11 @@ exports.postUpdateProfile = (req, res) => {
             profile.dateofbirth = dateofbirth;
             profile.nationality = nationality;
             profile.gender = gender;
-            if (image && checkfile(image)){
+
+            if (!imageUpload(image)) {
+                errors.image = 'file type is not supported, please upload jpg, jpeg or png';
+                return res.status(400).json(errors);
+            } else {
                 deleteFile(profile.avatar);
                 profile.avatar = image.path;
             }
