@@ -65,4 +65,7 @@
         nodejs
         postman
     Starting the application
-        type `npm run server` in the terminal to start
+        clone the appication to your system or fork it to your repository and into your system
+        cd (change directory) into the project folder
+        run `npm install` to install the dependencies
+        run `npm run server` in the terminal to start
