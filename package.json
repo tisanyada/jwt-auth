@@ -1,5 +1,5 @@
 {
-	"name": "ty-auth-jwt",
+	"name": "jwt-auth",
 	"version": "1.0.0",
 	"description": "",
 	"main": "server.js",
